@@ -1,81 +1,5 @@
 #include "brent.h"
 
-
-void golden(func_t f, double a, double b, double e, int N, int tr, res_t *p){
-    int i;
-    double r;
-    double ai, bi, c, d, l, fc, fd;
-    
-    i = 0;
-
-    if(tr == 1)
-        printf("1\n");
-    
-    ai = a;
-    bi = b;
-    l = bi - ai;
-    r = (3-sqrt(5))/2;
-    c = ai + r*l;
-    d = bi - r*l; 
-        
-    fc = f(c);
-    fd = f(d);
-
-    while(i <= N){
-       
-
-        if(l < 2*e){
-            (*p).st = 0;
-            p->x = (ai + bi)/2;
-            p->fx = f(p->x);
-            p->n = i;
-            p->pn = i;
-            p->gn = 0;
-            return;
-        }
-
-        if(!(ai < c && c < d && d < bi)){
-            (*p).st = -2;
-            p->x = (ai + bi)/2;
-            p->fx = f(p->x);
-            p->n = i;
-            p->pn = i;
-            p->gn = 0;
-            return;
-        }
-
-        if(fc < fd){
-            bi = d;
-            d = c;
-            l = bi - ai;
-            c = ai + r*l;
-            fd = fc;
-            fc = f(c);
-        }else{
-            ai = c;
-            c = d;
-            l = bi - ai;
-            d = bi - r*l; 
-            fc = fd;
-            fd = f(d);
-
-        }
-        i++;
-        
-    }
-    (*p).st = -1;
-    p->x = (ai + bi)/2;
-    p->fx = f(p->x);
-    p->n = i;
-    p->pn = i;
-    p->gn = 0;
-
-}
-
-void printtable(void){
-    printf("%3c %1c %12s %12c %12s %12c %12s\n", 'n', '|', "xm", '|', "dx", '|', "df");
-}
-
 void brent(func_t f, double a, double b, double e, int N, int tr, res_t *res){
     double x, r, w, v, u, dcur, dprv, g;
     double fx, fw, fv, fu, df1, df2, dx1, dx2;
@@ -92,6 +16,9 @@ void brent(func_t f, double a, double b, double e, int N, int tr, res_t *res){
     }
 
     while( res->n < N){
+        if(tr == 1)
+            printtr(res->n, x, b-a, fabs(f(b)-f(a)) );
+        
         if(fmax(x-a, b-x) < e){   
             res->st = 0;
             res->x = x;
@@ -157,4 +84,12 @@ void brent(func_t f, double a, double b, double e, int N, int tr, res_t *res){
         res->n++;
     }
     res->st = -2;
+}
+
+void printtable(void){
+    printf("%3c %1c %12s %11c %11s %11c %12s\n", 'n', '|', "xm", '|', "dx", '|', "df");
+}
+
+void printtr(int n, double xm, double dx,double df){
+    printf("%3d | %21.14e  | %21.14e | %21.14e\n", n, xm, dx, df);
 }

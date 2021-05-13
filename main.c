@@ -71,7 +71,14 @@ int main(int argc, char* argv[]){
     }
 
     brent(fs[fn-1], a, b, e, N, trace, &res);
+
+    if(res.st == -2){
+        printf("Status: -2\n Limit\n");
+        return -1;
+    }
     print(res);
+
+    return 0;
 }
 
 void print(res_t res){

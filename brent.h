@@ -32,9 +32,8 @@ typedef struct{
 typedef double(*func_t)(double);
 void print (res_t res);
 void printtable(void);
-void printtr(void);
+void printtr(int n, double xm, double dx, double df);
 void brent(func_t f, double a, double b, double e, int N, int tr, res_t *p);
-void golden(func_t f, double a, double b, double e, int N, int tr, res_t *p);
 void printerr (const char *s);
 int toInt(const char *str, int *res);
 int toDouble(const char *str, double *res);
